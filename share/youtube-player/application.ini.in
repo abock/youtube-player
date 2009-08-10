@@ -1,0 +1,11 @@
+[App]
+Vendor=Novell
+Name=YouTube Browser
+Version=@VERSION@
+BuildID=@BUILD_ID@
+Copyright=Copyright (c) 2009 SUSE Linux Products GmbH
+ID={24debe37-694a-4a14-8c43-4602f6f50fb3}
+
+[Gecko]
+MinVersion=1.9
+MaxVersion=1.9.*
