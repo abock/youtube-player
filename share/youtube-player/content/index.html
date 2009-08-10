@@ -8,16 +8,15 @@ body {
 
 .header {
   position: relative;
-  height: 50px;
-  margin: 0 0 12px 0; padding: 6px;
-  background: #202E31;
-  -webkit-border-radius: 5px;
+  height: 60px;
+  margin: 0 0 12px 0; padding: 0 0 0 126px;
+  background: #202E31 url("youtube.gif") -2px 0 no-repeat;
 }
 
 .header>form {
   display: inline-block;
   position: absolute;
-  top: 6px; left: 260px; right: 110px;
+  top: 6px; left: 260px; right: 80px;
   border: 0px;
   margin: 0px;
   padding: 0px;
@@ -25,32 +24,30 @@ body {
 
 .search-bar {
   width: 100%;
-  background: white url("search.png") no-repeat left center;
+  background: white url("search.png") no-repeat 4px center;
   vertical-align: top;
-  padding-left: 28px;
-  margin: 4px;
+  padding-left: 32px;
+  margin: 8px 4px 4px 4px;
   font-size: large;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  -moz-border-radius: 4px;
 }
-.youtubelogo {
-  margin: 8px;
-  border: 0px;
-}
+
 .button {
-  margin: 4px;
+  margin: 6px 2px;
   cursor: pointer;
+  padding: 0 6px;
+  -moz-border-radius: 4px;
+}
+
+.button:hover {
+  background: #444;
 }
 
 .rightside {
   position: absolute;
   overflow: hidden;
-  right: 6px; top: 6px;
+  right: 6px; top: 0px;
 }
-.buttonright {
-  margin: 5px;
-  border: none;
-  }
 
 .container {
   top: 70px;  bottom: 6px; left: 6px; right: 0;
@@ -106,9 +103,9 @@ ul.videos
   left: 0px;
 }
 input {
-  border: 2px #ccc solid;
-  background: #fafafa;
-  padding: 8px;
+  border: 1px #bbb solid;
+  background: #fefefe;
+  padding: 4px;
   color: #777;
 }
 input[type=text]:focus {
@@ -211,12 +208,11 @@ function initializer()
     }
 
     youtubeurl = "http://gdata.youtube.com/feeds/api/videos?q=" + q  + "&alt=json-in-script&callback=showMyVideos2&max-results=16&format=5&time=" + qtime;
-    headerhtml.push('<a id="logo" href="http://www.youtube.com/"><img class="youtubelogo" src="youtube.gif"/></a>');
-    headerhtml.push('<img alt="Best of the week" title="Best of the week"  class="button" onclick="qtimesetup(0);" src="button1.png"/>');
-    headerhtml.push('<img alt="Best of the day" title="Best of the day" class="button" onclick="qtimesetup(1);" src="button2.png"/>');
+    headerhtml.push('<img alt="Best of the week" title="Best of the week"  class="button" onclick="qtimesetup(0);" src="calendar-week.png"/>');
+    headerhtml.push('<img alt="Best of the day" title="Best of the day" class="button" onclick="qtimesetup(1);" src="calendar-day.png"/>');
     headerhtml.push('<form name="youtubeform"><input class="search-bar" type="text" name="q" value="' + q.replace(/\+/g,' ') + '"/><input type="hidden" name="qtime" value="all_time"/></form>');
-    headerhtml.push('<div class="rightside"><a href="javascript:history.go(0);"><img alt="Reload results" title="Reload results" class="buttonright" src="button3.png"/></a>');
-    headerhtml.push('<a href=javascript:window.opener=top;window.close();"><img alt="Close" title="Close" class="buttonright" src="button4.png"/></a></div>');
+    headerhtml.push('<div class="rightside"><img alt="Reload results" title="Reload results" class="button" src="reload.png" onclick="history.go(0);"/>');
+    //headerhtml.push('<a href=javascript:window.opener=top;window.close();"><img alt="Close" title="Close" class="button" src="button4.png"/></a></div>');
     document.getElementById('header').innerHTML = headerhtml.join('');
     var youtuberesults=document.createElement("script");
     youtuberesults.type="text/javascript";
