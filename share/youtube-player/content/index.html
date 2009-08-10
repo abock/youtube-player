@@ -1,0 +1,247 @@
+<html>
+<head>
+<title>Moblin YouTube Player</title>
+<style>
+body {
+  padding: 0; margin: 0;
+}
+
+.header {
+  position: relative;
+  height: 50px;
+  margin: 0 0 12px 0; padding: 6px;
+  background: #202E31;
+  -webkit-border-radius: 5px;
+}
+
+.header>form {
+  display: inline-block;
+  position: absolute;
+  top: 6px; left: 260px; right: 110px;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.search-bar {
+  width: 100%;
+  background: white url("search.png") no-repeat left center;
+  vertical-align: top;
+  padding-left: 28px;
+  margin: 4px;
+  font-size: large;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.youtubelogo {
+  margin: 8px;
+  border: 0px;
+}
+.button {
+  margin: 4px;
+  cursor: pointer;
+}
+
+.rightside {
+  position: absolute;
+  overflow: hidden;
+  right: 6px; top: 6px;
+}
+.buttonright {
+  margin: 5px;
+  border: none;
+  }
+
+.container {
+  top: 70px;  bottom: 6px; left: 6px; right: 0;
+  position: absolute;
+  overflow: hidden;
+
+}
+
+.videos2 {
+  position: absolute;
+  left: 300px; right: 0; bottom: 0; top: 0;
+  overflow: auto;
+}
+
+.playerContainer {
+  position: absolute;
+  top: 20px; left: 0;
+  height: 180px;
+  width: 290px;
+}
+.title {
+  font-family: "arial", "lucida console", "sans-serif";
+  font-size: small;
+  cursor: pointer;
+  color: #777;
+}
+.thumbnail {
+  cursor: pointer;
+  border: 2px solid #aaa;
+  padding: 3px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+ul.videos li {
+  float: left;
+  width: 10em;
+  margin-bottom: 1em;
+}
+ul.videos
+{
+  padding: 0; margin: 0;
+  list-style: none;
+}
+.videos li a{
+  display:block;
+  width:20px;
+  height: 20px;
+  text-decoration: none;
+  text-indent: -9000px;
+  padding: 0px;
+  background: url(star_rating.gif) left bottom;
+  z-index: 1;
+  left: 0px;
+}
+input {
+  border: 2px #ccc solid;
+  background: #fafafa;
+  padding: 8px;
+  color: #777;
+}
+input[type=text]:focus {
+  color: #333;
+  border-color: #666;
+}
+</style>
+<script type="text/javascript" src="swfobject.js"></script>
+<script type="text/javascript">
+function loadVideo(playerUrl, autoplay) {
+   swfobject.embedSWF(
+   playerUrl + '&rel=1&border=0&fs=1&autoplay=' + 
+   (autoplay?1:0), 'player', '290', '250', '9.0.0', false, 
+   false, {allowfullscreen: 'true'});
+}
+
+function relative_rating(average) {
+   if(average < 1) {
+   return '10px';
+   } else if(average < 1.5) {
+   return '20px';
+   } else if(average < 2) {
+   return '30px';
+   } else if(average < 2.5) {
+   return '40px';
+   } else if(average < 3) {
+   return '50px';
+   } else if(average < 3.5) {
+   return '60px';
+   } else if(average < 4) {
+   return '70px';
+   } else if(average < 4.5) {
+   return '80px';
+   } else if(average < 5) {
+   return '90px';
+   } else {
+   return '100px';
+   }
+}
+
+function showMyVideos2(data) {
+  var feed = data.feed;
+  var entries = feed.entry || [];
+  var html = ['<ul class="videos">'];
+  if (entries.length == 0){
+    html.push('<li>Sorry, no results were found. Please try another search.</li>');
+  }
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
+    var title = entry.title.$t.substr(0, 20);
+    var alttext = entry.title.$t;
+    if (entry.gd$rating) {
+       var average = entry.gd$rating.average;
+    } else { var average = 0 }
+    var rating = relative_rating(average);
+    var rating_render = '<a href="#" title="Average rating: '+average+'" style="width:'+rating+';">rating</a>';
+    var thumbnailUrl = entries[i].media$group.media$thumbnail[0].url;
+    var playerUrl = entries[i].media$group.media$content[0].url;
+    html.push('<li onclick="loadVideo(\'', playerUrl, '\', true)">',
+              '<img class="thumbnail" src="',thumbnailUrl,'" width="130" height="97"/><br />', 
+              '<span class="title">',title,'...</span><br />',
+              rating_render,'</li>');
+    }
+    html.push('</ul>');
+    document.getElementById('videos2').innerHTML = html.join('');
+    if (entries.length > 0) {
+       loadVideo(entries[0].media$group.media$content[0].url, false);
+    }
+}
+function qtimesetup(qtimeindex)
+{
+    if(qtimeindex==0) {    
+        qtime="this_week";
+    } else if(qtimeindex==1) {
+        qtime="today";
+    } else {
+        qtime="all_time";
+    }
+    document.youtubeform.qtime.value=qtime;
+    document.youtubeform.submit();
+}
+function initializer()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    var headerhtml = [];
+    q = vars['q'];
+    if(q==undefined) {
+        q="Moblin";
+    }
+    qtime = vars['qtime'];
+    if(qtime==undefined) {
+        qtime="all_time";
+    }
+
+    youtubeurl = "http://gdata.youtube.com/feeds/api/videos?q=" + q  + "&alt=json-in-script&callback=showMyVideos2&max-results=16&format=5&time=" + qtime;
+    headerhtml.push('<a id="logo" href="http://www.youtube.com/"><img class="youtubelogo" src="youtube.gif"/></a>');
+    headerhtml.push('<img alt="Best of the week" title="Best of the week"  class="button" onclick="qtimesetup(0);" src="button1.png"/>');
+    headerhtml.push('<img alt="Best of the day" title="Best of the day" class="button" onclick="qtimesetup(1);" src="button2.png"/>');
+    headerhtml.push('<form name="youtubeform"><input class="search-bar" type="text" name="q" value="' + q.replace(/\+/g,' ') + '"/><input type="hidden" name="qtime" value="all_time"/></form>');
+    headerhtml.push('<div class="rightside"><a href="javascript:history.go(0);"><img alt="Reload results" title="Reload results" class="buttonright" src="button3.png"/></a>');
+    headerhtml.push('<a href=javascript:window.opener=top;window.close();"><img alt="Close" title="Close" class="buttonright" src="button4.png"/></a></div>');
+    document.getElementById('header').innerHTML = headerhtml.join('');
+    var youtuberesults=document.createElement("script");
+    youtuberesults.type="text/javascript";
+    youtuberesults.src=youtubeurl;
+    document.getElementById('loader').appendChild(youtuberesults);
+}
+</script>
+</head>
+<body>
+
+<div class="header" id="header"></div>
+
+<div class="container">
+  <div class="playerContainer" id="playerContainer">
+      <object id="player" class="player"></object>
+  </div>
+
+  <div class="videos2" id="videos2">Loading results...</div>
+  </div>
+
+<div id="loader"></div>
+
+<script type="text/javascript"> 
+   initializer(); 
+</script>
+
+</body>
+</html>

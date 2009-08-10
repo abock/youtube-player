@@ -1,0 +1,4 @@
+#!/bin/sh
+youtubeplayerroot=/usr/share/youtube-player
+
+xulrunner $youtubeplayerroot/application.ini -url $youtubeplayerroot/content/index.html
